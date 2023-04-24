@@ -1,0 +1,23 @@
+import pandas as pd
+from flask import Flask, render_template
+
+
+app = Flask(__name__)
+
+df = pd.read_csv("dictionary.csv")
+
+@app.route("/")
+def home():
+    return render_template("home.html")
+
+
+@app.route("/api/v1/<word>")
+def about(word):
+    df = pd.read_csv("dictionary.csv")
+    definition = df.loc[df["word"]==word]['definition'].squeeze()
+    result_dictionary =  {"definition": definition, "word": word}
+    return result_dictionary
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
